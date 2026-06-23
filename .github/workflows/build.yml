@@ -32,22 +32,24 @@ jobs:
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
-      - name: Install Gradle
+      - name: Install Gradle 8.9
         run: |
           cd $HOME
-          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
-          unzip -q gradle-8.5-bin.zip
-          echo "$HOME/gradle-8.5/bin" >> $GITHUB_PATH
+          wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip
+          unzip -q gradle-8.9-bin.zip
+          echo "$HOME/gradle-8.9/bin" >> $GITHUB_PATH
 
       - name: Generate Gradle Wrapper
         working-directory: ./V2rayNG
-        run: gradle wrapper
+        run: gradle wrapper --gradle-version 8.9
 
       - name: Build debug APK
         working-directory: ./V2rayNG
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
